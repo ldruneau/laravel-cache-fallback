@@ -4,7 +4,7 @@ namespace Fingo\LaravelCacheFallback;
 
 use Illuminate\Cache\CacheServiceProvider;
 use Illuminate\Cache\MemcachedConnector;
-
+use Illuminate\Cache\Console\ClearCommand;
 class CacheFallbackServiceProvider extends CacheServiceProvider
 {
     /**
@@ -48,4 +48,18 @@ class CacheFallbackServiceProvider extends CacheServiceProvider
 
         $this->registerCommands();
     }
+    /**
+     * Register the cache related console commands.
+     *
+     * @return void
+     */
+    public function registerCommands()
+    {
+        $this->app->singleton('command.cache.clear', function ($app) {
+            return new ClearCommand($app['cache']);
+        });
+
+        $this->commands('command.cache.clear');
+    }
+
 }
